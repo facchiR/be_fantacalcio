@@ -60,7 +60,7 @@ class Atleta extends Table {
         }
     }
     
-    public function storeCategorie(){
+    public function storeIscrizioni(){
         try{
             // rimuovo quelle relazioni che non valgono piu
             $sql = "UPDATE iscrizioni SET atleti_id = null WHERE id NOT IN (".
