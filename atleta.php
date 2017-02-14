@@ -25,5 +25,7 @@ if (!empty($_POST["item"])) {
     }
 }
 
-$list = Atleta::getAll();
-echo json_encode(["items" => $list, "message" => $message]);
+if($id && empty($_REQUEST['act']))
+    echo json_encode(["item" => $item, "message" => $message]);
+else
+    echo json_encode(["items" => Atleta::getAll(), "message" => $message]);

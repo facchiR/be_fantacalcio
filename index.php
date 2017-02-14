@@ -8,5 +8,5 @@ spl_autoload_register(function($class_name) {
 
 if (isset($_SERVER["HTTP_CONTENT_TYPE"]) &&
         stripos($_SERVER["HTTP_CONTENT_TYPE"], "application/json") === 0) {
-    $_POST = json_decode(file_get_contents("php://input"));
+    $_POST = json_decode(file_get_contents("php://input"), true);
 }
