@@ -33,7 +33,7 @@ DROP TABLE IF EXISTS `atleti`;
 CREATE TABLE `atleti` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nome` varchar(50) DEFAULT NULL,
-  `datanascita` timestamp NULL DEFAULT NULL,
+  `datanascita` datetime NULL DEFAULT NULL,
   `sesso` char(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
@@ -91,7 +91,6 @@ CREATE TABLE `iscrizioni` (
   `gare_id` int(11) NOT NULL,
   `pettorale` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `pettorale` (`pettorale`),
   KEY `atleti_id` (`atleti_id`),
   KEY `gare_id` (`gare_id`),
   CONSTRAINT `iscrizioni_ibfk_1` FOREIGN KEY (`atleti_id`) REFERENCES `atleti` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
