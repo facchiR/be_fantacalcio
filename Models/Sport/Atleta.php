@@ -7,6 +7,13 @@ class Atleta extends Table {
     
     // Nome della tabella
     const TABLE_NAME = "atleti";
+    const BINDINGS = [
+        //"nome_colonna"=>"nome_parametro",
+        "id"=>"id",
+        "nome"=>"nome",
+        "datanascita"=>"datanascita",
+        "sesso"=>"sesso"
+    ];
     
     public $nome;
     public $datanascita;
@@ -29,22 +36,6 @@ class Atleta extends Table {
                 $this->$k = $v;
             }       
         }
-    }
-    
-    /**
-     * Metodo richiesto per integrare l'oggetto con una tabella estendendo table.php
-     * Quesyo metodo avrà lo scopo di mappare tutti le proprietà dell oggetto studente
-     * con i nomi delle colonne sul database
-     * @return type
-     */
-    static function getBindings(){
-        return [
-            //"nome_colonna"=>"nome_parametro",
-            "id"=>"id",
-            "nome"=>"nome",
-            "datanascita"=>"datanascita",
-            "sesso"=>"sesso"
-        ];
     }
     
     protected function load($id){

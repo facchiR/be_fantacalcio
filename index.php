@@ -3,7 +3,7 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 spl_autoload_register(function($class_name) {
-    require_once $class_name.".php";
+    require_once  str_replace("\\", DIRECTORY_SEPARATOR, $class_name.".php");
 });
 
 if (isset($_SERVER["HTTP_CONTENT_TYPE"]) &&

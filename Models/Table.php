@@ -15,7 +15,16 @@ abstract class Table {
     
     public $id = 0;
     
-    abstract static function getBindings();
+    /**
+     * Metodo richiesto per integrare l'oggetto con una tabella estendendo table.php
+     * Quesyo metodo avrà lo scopo di mappare tutti le proprietà dell oggetto studente
+     * con i nomi delle colonne sul database
+     * @return type
+     */
+    static function getBindings(){
+        $class = get_called_class();
+        return $class::BINDINGS;
+    }
     
     static function init(&$obj, $id=0){
         $class = get_called_class();
