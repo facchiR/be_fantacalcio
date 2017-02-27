@@ -3,25 +3,24 @@ namespace Models\Sport;
 
 use Models\Table as Table;
 
-class Atleta extends Table {
+class Calciatore extends Table {
     
     // Nome della tabella
-    const TABLE_NAME = "atleti";
+    const TABLE_NAME = "calciatore";
     const BINDINGS = [
         //"nome_colonna"=>"nome_parametro",
         "id"=>"id",
         "nome"=>"nome",
-        "datanascita"=>"datanascita",
-        "sesso"=>"sesso"
+        "ruolo"=>"ruolo",
+        "squadra_id"=>"squadra_id",
+        
     ];
     
     public $nome;
-    public $datanascita;
-    public $sesso;
-    public $telefono;
-    public $cf;
-    protected $iscrizioni = array(); // array of ID
+    public $ruolo;
+    public $squadra_id = null;
     
+        
     public function __construct($id = 0, $params = []){
         
         parent::init($this, $id);
@@ -40,27 +39,29 @@ class Atleta extends Table {
     
     protected function load($id){
         parent::load($id, $this);
-        $this->loadIscrizioni();
+        $this->loadSquadra();
     }
     
     public function save(){
         parent::save();
-        $this->storeIscrizioni();
+        //$this->storeSquadra();
     }
     
-    public function loadIscrizioni(){
-        try{
-            $sql = "SELECT id FROM iscrizioni WHERE ".self::TABLE_NAME."_id = :id ORDER BY id";
+     public function loadSquadra() {
+        try {
+            $sql = "SELECT id, denominazione, FROM squadra WHERE id = :id ORDER BY id";
             $stmt = self::$db->prepare($sql);
-            if($stmt->execute([":id"=>$this->id])){
-                $this->iscrizioni = array_map(function($i){return $i['id'];}, $stmt->fetchAll());
+            if ($stmt->execute([":id" => $this->id])) {
+                // $this->cat = $this->id; 
+                $squadra_id = $stmt->fetch();
             }
-        }catch(\PDOException $e){
+        } catch (\PDOException $e) {
             die($e->getMessage());
         }
     }
     
-    public function storeIscrizioni(){
+    
+    public function storeSquadra(){
         try{
             // rimuovo quelle relazioni che non valgono piu
             $sql = "UPDATE iscrizioni SET atleti_id = null WHERE id NOT IN (".

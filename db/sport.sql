@@ -1,120 +1,89 @@
--- MySQL dump 10.13  Distrib 5.6.34, for Win32 (AMD64)
---
--- Host: 127.0.0.1    Database: sport
--- ------------------------------------------------------
--- Server version	5.6.34
+-- Adminer 4.2.5 MySQL dump
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
-/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
-/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+SET NAMES utf8;
+SET time_zone = '+00:00';
+SET foreign_key_checks = 0;
+SET sql_mode = 'NO_AUTO_VALUE_ON_ZERO';
 
---
--- Current Database: `sport`
---
+DROP TABLE IF EXISTS `calciatore`;
+CREATE TABLE `calciatore` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `nome` varchar(50) NOT NULL,
+  `ruolo` varchar(50) DEFAULT NULL,
+  `squadra_id` int(10) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `squadra_id` (`squadra_id`),
+  CONSTRAINT `calciatore_ibfk_1` FOREIGN KEY (`squadra_id`) REFERENCES `squadra` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE DATABASE /*!32312 IF NOT EXISTS*/ `sport` /*!40100 DEFAULT CHARACTER SET utf8 */;
+INSERT INTO `calciatore` (`id`, `nome`, `ruolo`, `squadra_id`) VALUES
+(1,	'eta beta',	'attaccante',	NULL),
+(2,	'ned flanders',	'difensore',	3),
+(4,	'et ',	'portiere',	NULL),
+(5,	'paperino',	'centrocampo',	4);
 
-USE `sport`;
+DROP VIEW IF EXISTS `calciatore_v`;
+CREATE TABLE `calciatore_v` (`id` int(10), `nome` varchar(50), `ruolo` varchar(50), `squadra_id` int(10), `allenatore` varchar(50), `denominazione` varchar(50), `datafondazione` datetime);
 
---
--- Table structure for table `atleti`
---
 
-DROP TABLE IF EXISTS `atleti`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `atleti` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nome` varchar(50) DEFAULT NULL,
-  `datanascita` datetime NULL DEFAULT NULL,
-  `sesso` char(1) DEFAULT NULL,
+DROP VIEW IF EXISTS `calciatore_view`;
+CREATE TABLE `calciatore_view` (`nome` varchar(50), `ruolo` varchar(50), `squadra_id` int(10));
+
+
+DROP TABLE IF EXISTS `calendario`;
+CREATE TABLE `calendario` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `data` datetime NOT NULL,
+  `goal_casa` int(11) NOT NULL,
+  `goal_ospite` int(11) NOT NULL,
+  `squadra_id` int(10) NOT NULL,
+  `ospite_id` int(10) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `squadra_id` (`squadra_id`),
+  KEY `ospite_id` (`ospite_id`),
+  CONSTRAINT `calendario_ibfk_2` FOREIGN KEY (`squadra_id`) REFERENCES `squadra` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `calendario_ibfk_3` FOREIGN KEY (`ospite_id`) REFERENCES `squadra` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+DROP VIEW IF EXISTS `calendario_v`;
+CREATE TABLE `calendario_v` (`id` int(10), `data` datetime, `goal_casa` int(11), `goal_ospite` int(11), `squadra_id` int(10), `allena_casa` varchar(50), `nome_casa` varchar(50), `data_casa` datetime, `ospite_id` int(10), `allena_ospite` varchar(50), `nome_ospite` varchar(50), `data_ospite` datetime);
+
+
+DROP TABLE IF EXISTS `squadra`;
+CREATE TABLE `squadra` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `allenatore` varchar(50) DEFAULT NULL,
+  `denominazione` varchar(50) NOT NULL,
+  `datafondazione` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `atleti`
---
+INSERT INTO `squadra` (`id`, `allenatore`, `denominazione`, `datafondazione`) VALUES
+(3,	'homer simpson',	'atletico springfield',	'1990-05-05 00:00:00'),
+(4,	'paperoga',	'real paperopoli',	'1962-02-06 00:00:00');
 
-LOCK TABLES `atleti` WRITE;
-/*!40000 ALTER TABLE `atleti` DISABLE KEYS */;
-INSERT INTO `atleti` VALUES (1,'Speedy Gonzales','2015-06-30 22:00:00','m'),(2,'Beep Beep','2017-02-11 23:00:00','f');
-/*!40000 ALTER TABLE `atleti` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `gare`
---
-
-DROP TABLE IF EXISTS `gare`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `gare` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `gara` varchar(100) NOT NULL,
-  `km` int(11) DEFAULT NULL,
-  `orapartenza` timestamp NULL DEFAULT NULL,
-  `luogopartenza` varchar(100) DEFAULT NULL,
-  `luogoarrivo` varchar(100) DEFAULT NULL,
+DROP TABLE IF EXISTS `votazione`;
+CREATE TABLE `votazione` (
+  `id` int(10) NOT NULL AUTO_INCREMENT,
+  `calciatore_id` int(10) NOT NULL,
+  `calendario_id` int(10) NOT NULL,
+  `voto` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `gara` (`gara`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+  KEY `calciatore_id` (`calciatore_id`),
+  KEY `calendario_id` (`calendario_id`),
+  CONSTRAINT `votazione_ibfk_1` FOREIGN KEY (`calciatore_id`) REFERENCES `calciatore` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `votazione_ibfk_2` FOREIGN KEY (`calendario_id`) REFERENCES `calendario` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `gare`
---
 
-LOCK TABLES `gare` WRITE;
-/*!40000 ALTER TABLE `gare` DISABLE KEYS */;
-INSERT INTO `gare` VALUES (1,'Torino - Lione',666,'2017-02-27 23:00:00','Torino','Lione');
-/*!40000 ALTER TABLE `gare` ENABLE KEYS */;
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `calciatore_v`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `calciatore_v` AS select `c`.`id` AS `id`,`c`.`nome` AS `nome`,`c`.`ruolo` AS `ruolo`,`c`.`squadra_id` AS `squadra_id`,`s`.`allenatore` AS `allenatore`,`s`.`denominazione` AS `denominazione`,`s`.`datafondazione` AS `datafondazione` from (`calciatore` `c` left join `squadra` `s` on((`c`.`squadra_id` = `s`.`id`)));
 
---
--- Table structure for table `iscrizioni`
---
+DROP TABLE IF EXISTS `calciatore_view`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `calciatore_view` AS select `c`.`nome` AS `nome`,`c`.`ruolo` AS `ruolo`,`c`.`squadra_id` AS `squadra_id` from (`calciatore` `c` left join `squadra` `s` on((`c`.`squadra_id` = `s`.`id`)));
 
-DROP TABLE IF EXISTS `iscrizioni`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `iscrizioni` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `atleti_id` int(11) NOT NULL,
-  `gare_id` int(11) NOT NULL,
-  `pettorale` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `atleti_id` (`atleti_id`),
-  KEY `gare_id` (`gare_id`),
-  CONSTRAINT `iscrizioni_ibfk_1` FOREIGN KEY (`atleti_id`) REFERENCES `atleti` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION,
-  CONSTRAINT `iscrizioni_ibfk_2` FOREIGN KEY (`gare_id`) REFERENCES `gare` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
+DROP TABLE IF EXISTS `calendario_v`;
+CREATE ALGORITHM=UNDEFINED SQL SECURITY DEFINER VIEW `calendario_v` AS select `cal`.`id` AS `id`,`cal`.`data` AS `data`,`cal`.`goal_casa` AS `goal_casa`,`cal`.`goal_ospite` AS `goal_ospite`,`cal`.`squadra_id` AS `squadra_id`,`s`.`allenatore` AS `allena_casa`,`s`.`denominazione` AS `nome_casa`,`s`.`datafondazione` AS `data_casa`,`cal`.`ospite_id` AS `ospite_id`,`o`.`allenatore` AS `allena_ospite`,`o`.`denominazione` AS `nome_ospite`,`o`.`datafondazione` AS `data_ospite` from ((`calendario` `cal` left join `squadra` `s` on((`cal`.`squadra_id` = `s`.`id`))) left join `squadra` `o` on((`cal`.`ospite_id` = `o`.`id`)));
 
---
--- Dumping data for table `iscrizioni`
---
-
-LOCK TABLES `iscrizioni` WRITE;
-/*!40000 ALTER TABLE `iscrizioni` DISABLE KEYS */;
-INSERT INTO `iscrizioni` VALUES (1,1,1,100),(2,2,1,101);
-/*!40000 ALTER TABLE `iscrizioni` ENABLE KEYS */;
-UNLOCK TABLES;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2017-02-14  5:00:36
+-- 2017-02-27 23:52:04
