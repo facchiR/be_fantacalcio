@@ -11,14 +11,13 @@ $item = $id ? new Squadra($id) : new Squadra();
 if (isset($_REQUEST['act']) && $_REQUEST['act'] == 'del') {
     $item->delete();
 }
-
 if (!empty($_POST['item'])) {
   //NON ENTRA QUI
     foreach ($_POST['item'] as $k => $v) {
         $item->$k = $v;
     }
 
-    if ($item->validate()) {
+    if (true || $item->validate()) {
         $item->save();
     } else {
         $message = $item->getErrors();
